@@ -5,9 +5,12 @@ FROM node:20-alpine AS builder
 
 WORKDIR /app
 
-# Install server dependencies (include devDependencies for TypeScript compilation)
+# Force development mode so npm installs devDependencies (TypeScript, @types/*)
+ENV NODE_ENV=development
+
+# Install server dependencies
 COPY package.json package-lock.json* ./
-RUN npm ci --include=dev
+RUN npm ci
 
 # Install client dependencies
 COPY client/package.json client/package-lock.json* ./client/

@@ -14,7 +14,8 @@
     "declarationMap": true,
     "sourceMap": true,
     "moduleResolution": "node",
-    "typeRoots": ["./node_modules/@types", "./src/types"]
+    "typeRoots": ["./node_modules/@types", "./src/types"],
+    "types": ["node", "cors", "express", "jsonwebtoken", "bcryptjs", "morgan", "uuid", "node-cron"]
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules", "dist", "migrations", "seeds", "tests"],
