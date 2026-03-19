@@ -42,30 +42,33 @@ const USER_IDS = {
 };
 
 export async function seed(knex: Knex): Promise<void> {
-  // Clean tables in dependency order
-  await knex('activity_feed').del();
-  await knex('approval_requests').del();
-  await knex('notifications').del();
-  await knex('documents').del();
-  await knex('document_folders').del();
-  await knex('user_certifications').del();
-  await knex('courses').del();
-  await knex('mdf_requests').del();
-  await knex('mdf_allocations').del();
-  await knex('quote_line_items').del();
-  await knex('quotes').del();
-  await knex('leads').del();
-  await knex('deal_products').del();
-  await knex('deal_status_history').del();
-  await knex('deals').del();
-  await knex('tier_product_pricing').del();
-  await knex('products').del();
-  await knex('product_categories').del();
-  await knex('users').del();
-  // Remove FK constraint temporarily to clear orgs
-  await knex.raw('UPDATE organizations SET channel_manager_id = NULL');
-  await knex('organizations').del();
-  await knex('partner_tiers').del();
+  // Clean all tables — TRUNCATE CASCADE handles FK constraints automatically
+  await knex.raw(`
+    TRUNCATE TABLE
+      activity_feed,
+      approval_requests,
+      notifications,
+      documents,
+      document_folders,
+      user_certifications,
+      courses,
+      mdf_requests,
+      mdf_allocations,
+      quote_line_items,
+      quote_status_history,
+      quotes,
+      leads,
+      deal_products,
+      deal_status_history,
+      deals,
+      tier_product_pricing,
+      products,
+      product_categories,
+      users,
+      organizations,
+      partner_tiers
+    CASCADE
+  `);
 
   const passwordHash = await bcrypt.hash('Demo123!', BCRYPT_ROUNDS);
 

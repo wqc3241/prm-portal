@@ -46,18 +46,22 @@ function isoDate(d: Date): string {
 
 export async function seed(knex: Knex): Promise<void> {
   // ─── Clean demo-only tables (preserves tier, product, user, org data) ──────
-  await knex('activity_feed').del();
-  await knex('notifications').del();
-  await knex('user_certifications').del();
-  await knex('mdf_requests').del();
-  await knex('mdf_allocations').del();
-  await knex('quote_line_items').del();
-  await knex('quote_status_history').del();
-  await knex('quotes').del();
-  await knex('deal_products').del();
-  await knex('deal_status_history').del();
-  await knex('leads').del();
-  await knex('deals').del();
+  await knex.raw(`
+    TRUNCATE TABLE
+      activity_feed,
+      notifications,
+      user_certifications,
+      mdf_requests,
+      mdf_allocations,
+      quote_line_items,
+      quote_status_history,
+      quotes,
+      deal_products,
+      deal_status_history,
+      leads,
+      deals
+    CASCADE
+  `);
 
   // ─── Fetch reference data ──────────────────────────────────────────────────
 
