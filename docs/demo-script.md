@@ -13,7 +13,7 @@
 
 **Login as Admin**
 - Navigate to `/login`
-- Credentials: `admin@panw.demo` / `Demo123!`
+- Credentials: `admin@prmportal.com` / `Demo123!` (or use the quick-login button)
 
 **Admin Dashboard**
 - Point out the program-level metrics: total partners, pipeline value, revenue trends
@@ -31,7 +31,7 @@
 
 **Switch to Partner User**
 - Open a new tab or log out
-- Login as: `partner@acme.demo` / `Demo123!`
+- Login as: `admin@cybershield.com` / `Demo123!` (Diamond tier partner)
 
 **Partner Dashboard**
 - Show the personalized welcome with org name and tier badge in the header
