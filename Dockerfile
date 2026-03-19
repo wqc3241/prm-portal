@@ -37,6 +37,8 @@ RUN cd client && npm run build
 # ══════════════════════════════════════════════════════════════════════════════
 FROM node:20-alpine AS production
 
+ENV NODE_ENV=production
+
 RUN apk add --no-cache tini
 
 WORKDIR /app

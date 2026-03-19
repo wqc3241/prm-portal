@@ -12,7 +12,11 @@ const PORT = parseInt(process.env.PORT || '3000', 10);
 async function start() {
   // Validate critical env vars
   if (process.env.NODE_ENV === 'production') {
-    const required = ['DB_HOST', 'DB_NAME', 'DB_USER', 'DB_PASSWORD', 'JWT_SECRET', 'JWT_REFRESH_SECRET'];
+    const required = ['JWT_SECRET', 'JWT_REFRESH_SECRET'];
+    // Require either DATABASE_URL or individual DB_* vars
+    if (!process.env.DATABASE_URL) {
+      required.push('DB_HOST', 'DB_NAME', 'DB_USER', 'DB_PASSWORD');
+    }
     for (const key of required) {
       if (!process.env[key]) {
         console.error(`Missing required environment variable: ${key}`);
