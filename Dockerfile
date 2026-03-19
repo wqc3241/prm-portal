@@ -61,15 +61,18 @@ COPY --from=builder /app/dist-db/seeds/ ./seeds-compiled/
 # Copy the plain-JS production knexfile for the CLI
 COPY knexfile.production.js ./knexfile.production.js
 
+# Copy startup script
+COPY start.sh ./start.sh
+
 # Copy client build output
 COPY --from=builder /app/client/dist/ ./client/dist/
 
-# Create non-root user
-RUN addgroup -S appgroup && adduser -S appuser -G appgroup
+# Create non-root user and fix permissions
+RUN chmod +x start.sh && \
+    addgroup -S appgroup && adduser -S appuser -G appgroup
 USER appuser
 
 EXPOSE 3000
 
-# Run migrations, seed data, then start the server — all plain JS, no ts-node needed
 ENTRYPOINT ["/sbin/tini", "--"]
-CMD ["sh", "-c", "npx knex migrate:latest --knexfile knexfile.production.js && npx knex seed:run --knexfile knexfile.production.js && node dist/server.js"]
+CMD ["sh", "./start.sh"]

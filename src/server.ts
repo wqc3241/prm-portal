@@ -27,18 +27,25 @@ async function start() {
 
   // Test database connection
   try {
+    console.log('[Database] Connecting to PostgreSQL...');
+    console.log('[Database] DATABASE_URL set:', !!process.env.DATABASE_URL);
     await db.raw('SELECT 1');
     console.log('[Database] Connected to PostgreSQL');
   } catch (err: any) {
-    console.error('[Database] Connection failed:', err.message);
+    console.error('[Database] Connection failed:', err.message || err);
+    console.error('[Database] Full error:', JSON.stringify(err, null, 2));
     process.exit(1);
   }
 
   // Connect Redis (non-blocking — rate limiting degrades gracefully)
-  try {
-    await connectRedis();
-  } catch {
-    console.warn('[Redis] Could not connect. Rate limiting will be disabled.');
+  if (process.env.REDIS_URL) {
+    try {
+      await connectRedis();
+    } catch {
+      console.warn('[Redis] Could not connect. Rate limiting will be disabled.');
+    }
+  } else {
+    console.log('[Redis] REDIS_URL not set, skipping Redis connection.');
   }
 
   const server = app.listen(PORT, () => {
