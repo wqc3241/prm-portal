@@ -54,6 +54,7 @@ export async function seed(knex: Knex): Promise<void> {
   await knex('mdf_allocations').del();
   await knex('quote_line_items').del();
   await knex('quotes').del();
+  await knex('leads').del();
   await knex('deal_products').del();
   await knex('deal_status_history').del();
   await knex('deals').del();
