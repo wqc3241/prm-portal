@@ -1,0 +1,17 @@
+node_modules
+client/node_modules
+dist
+client/dist
+.env
+.env.local
+*.log
+.git
+.gitignore
+.vscode
+.idea
+*.md
+!CLAUDE.md
+tests
+coverage
+.nyc_output
+docs

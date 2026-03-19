@@ -1,0 +1,81 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    @apply text-panw-gray-800 antialiased;
+  }
+
+  body {
+    @apply bg-panw-gray-50;
+  }
+
+  /* Focus ring using PANW blue */
+  *:focus-visible {
+    @apply outline-2 outline-offset-2 outline-panw-blue;
+  }
+
+  /* Selection highlight */
+  ::selection {
+    @apply bg-panw-lightblue/20 text-panw-navy;
+  }
+
+  /* Custom scrollbar — thin, subtle */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    @apply bg-transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    @apply bg-panw-gray-300 rounded-full;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-panw-gray-400;
+  }
+
+  /* Firefox thin scrollbar */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: theme('colors.panw.gray.300') transparent;
+  }
+}
+
+@layer components {
+  /* PANW-branded card */
+  .panw-card {
+    @apply bg-white rounded-lg shadow-panw border border-panw-gray-100;
+  }
+
+  /* PANW primary button */
+  .panw-btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-md bg-panw-blue px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-panw-navy focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-panw-blue transition-colors disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  /* PANW secondary button */
+  .panw-btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 rounded-md bg-white px-4 py-2.5 text-sm font-semibold text-panw-gray-700 shadow-sm ring-1 ring-inset ring-panw-gray-200 hover:bg-panw-gray-50 transition-colors;
+  }
+
+  /* PANW orange accent button */
+  .panw-btn-accent {
+    @apply inline-flex items-center justify-center gap-2 rounded-md bg-panw-orange px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-orange-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-panw-orange transition-colors;
+  }
+}
+
+@layer utilities {
+  .line-clamp-1 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+  }
+  .line-clamp-2 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+  }
+}
