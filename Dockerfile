@@ -5,9 +5,9 @@ FROM node:20-alpine AS builder
 
 WORKDIR /app
 
-# Install server dependencies
+# Install server dependencies (include devDependencies for TypeScript compilation)
 COPY package.json package-lock.json* ./
-RUN npm ci
+RUN npm ci --include=dev
 
 # Install client dependencies
 COPY client/package.json client/package-lock.json* ./client/
