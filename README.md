@@ -10,6 +10,24 @@ Built with **React + Express.js + TypeScript + PostgreSQL** to demonstrate partn
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-4169E1?logo=postgresql&logoColor=white)
 ![Tests](https://img.shields.io/badge/Tests-568_passing-brightgreen)
 
+## Live Demo
+
+| | URL |
+|---|---|
+| **Frontend** | [prm-portal.vercel.app](https://prm-portal.vercel.app) |
+| **Backend API** | [prm-portal-production.up.railway.app](https://prm-portal-production.up.railway.app/api/v1/health) |
+
+Login with any demo account below — all use password **`Demo123!`**. The login page has quick-login buttons for each role.
+
+### Deployment Architecture
+
+| Service | Platform | Details |
+|---|---|---|
+| **Frontend** | Vercel | React SPA with Vite, auto-deploys from `client/` directory |
+| **Backend API** | Railway | Express.js in Docker, auto-deploys from GitHub |
+| **PostgreSQL** | Railway | Managed PostgreSQL 16, 21 tables with pg_trgm extension |
+| **Redis** | — | Optional (rate limiting + Bull queues disabled in production) |
+
 ---
 
 ## Features
@@ -44,7 +62,11 @@ Built with **React + Express.js + TypeScript + PostgreSQL** to demonstrate partn
 - Node.js 18+
 - Docker & Docker Compose
 
-### Option 1: Local Development (recommended)
+### Option 1: Live Demo (no setup needed)
+
+Visit **[prm-portal.vercel.app](https://prm-portal.vercel.app)** and use any demo account listed below.
+
+### Option 2: Local Development
 
 ```bash
 # 1. Start infrastructure
@@ -66,7 +88,7 @@ cd client && npm install && npm run dev
 
 Open **http://localhost:5173** in your browser.
 
-### Option 2: Full Docker
+### Option 3: Full Docker
 
 ```bash
 cp .env.example .env
@@ -275,6 +297,23 @@ npm run test:integration # Run integration tests only
 npm run docker:up        # Start Docker Compose
 npm run docker:down      # Stop Docker Compose
 ```
+
+## Deployment
+
+### Frontend (Vercel)
+
+The React SPA deploys from the `client/` directory on Vercel:
+- **Root Directory:** `client`
+- **Framework:** Vite
+- **Build Command:** `npm run build`
+- **Environment Variable:** `VITE_API_URL=https://prm-portal-production.up.railway.app`
+
+### Backend (Railway)
+
+The Express API deploys via Docker from the project root:
+- **Dockerfile:** Multi-stage build (builder + production)
+- **Startup:** Runs migrations, seeds demo data, then starts the server
+- **Environment Variables:** `DATABASE_URL`, `JWT_SECRET`, `JWT_REFRESH_SECRET`, `CORS_ORIGIN`
 
 ## License
 
