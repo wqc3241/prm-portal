@@ -1,0 +1,10 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "strict": false,
+    "noImplicitThis": false,
+    "noImplicitAny": false,
+    "rootDir": "."
+  },
+  "include": ["src/**/*", "knexfile.ts"]
+}

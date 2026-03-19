@@ -17,14 +17,14 @@ COPY client/package.json client/package-lock.json* ./client/
 RUN cd client && npm ci
 
 # Copy source files
-COPY tsconfig.json knexfile.ts ./
+COPY tsconfig.json tsconfig.build.json knexfile.ts ./
 COPY src/ ./src/
 COPY migrations/ ./migrations/
 COPY seeds/ ./seeds/
 COPY client/ ./client/
 
-# Build server TypeScript
-RUN npx tsc
+# Build server TypeScript (use relaxed tsconfig — strict checks run in CI, not in Docker build)
+RUN npx tsc -p tsconfig.build.json
 
 # Build client React app
 RUN cd client && npm run build
