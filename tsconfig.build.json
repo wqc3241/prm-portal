@@ -3,8 +3,7 @@
   "compilerOptions": {
     "strict": false,
     "noImplicitThis": false,
-    "noImplicitAny": false,
-    "rootDir": "."
+    "noImplicitAny": false
   },
-  "include": ["src/**/*", "knexfile.ts"]
+  "include": ["src/**/*"]
 }

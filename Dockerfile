@@ -17,17 +17,18 @@ COPY client/package.json client/package-lock.json* ./client/
 RUN cd client && npm ci
 
 # Copy source files
-COPY tsconfig.json tsconfig.build.json knexfile.ts ./
+COPY tsconfig.json tsconfig.build.json tsconfig.db.json knexfile.ts ./
 COPY src/ ./src/
 COPY migrations/ ./migrations/
 COPY seeds/ ./seeds/
 COPY client/ ./client/
 
-# Build server TypeScript
-# tsc emits all JS even with type errors (noEmitOnError defaults to false).
-# This codebase uses Express v5 + Knex types that produce TS2345/TS2339 errors
-# but are correct at runtime — same as ts-node --transpileOnly in dev.
+# Build server TypeScript (src/ → dist/)
+# Type errors from Express v5 params and Knex are safe at runtime
 RUN npx tsc -p tsconfig.build.json || true
+
+# Compile migrations, seeds, and knexfile to JS (for production runtime)
+RUN npx tsc -p tsconfig.db.json || true
 
 # Build client React app
 RUN cd client && npm run build
@@ -47,20 +48,21 @@ WORKDIR /app
 COPY package.json package-lock.json* ./
 RUN npm ci --omit=dev && npm cache clean --force
 
-# Copy compiled server
+# Copy compiled server (src/ → dist/)
 COPY --from=builder /app/dist/ ./dist/
 
-# Copy client build output (served as static files)
+# Copy compiled knexfile.js to project root (server imports it via ../../knexfile)
+COPY --from=builder /app/dist-db/knexfile.js ./knexfile.js
+
+# Copy compiled migrations and seeds for production knex CLI
+COPY --from=builder /app/dist-db/migrations/ ./migrations-compiled/
+COPY --from=builder /app/dist-db/seeds/ ./seeds-compiled/
+
+# Copy the plain-JS production knexfile for the CLI
+COPY knexfile.production.js ./knexfile.production.js
+
+# Copy client build output
 COPY --from=builder /app/client/dist/ ./client/dist/
-
-# Copy migration, seed, and config files (needed at runtime for knex)
-COPY --from=builder /app/knexfile.ts ./knexfile.ts
-COPY --from=builder /app/migrations/ ./migrations/
-COPY --from=builder /app/seeds/ ./seeds/
-COPY --from=builder /app/tsconfig.json ./tsconfig.json
-
-# ts-node is needed for knex CLI to run .ts migrations/seeds
-RUN npm install --no-save ts-node typescript @types/node
 
 # Create non-root user
 RUN addgroup -S appgroup && adduser -S appuser -G appgroup
@@ -68,6 +70,6 @@ USER appuser
 
 EXPOSE 3000
 
-# Entrypoint: run migrations, seed base data, seed demo data, start server
+# Run migrations, seed data, then start the server — all plain JS, no ts-node needed
 ENTRYPOINT ["/sbin/tini", "--"]
-CMD ["sh", "-c", "npx knex migrate:latest --knexfile knexfile.ts && npx knex seed:run --knexfile knexfile.ts && node dist/server.js"]
+CMD ["sh", "-c", "npx knex migrate:latest --knexfile knexfile.production.js && npx knex seed:run --knexfile knexfile.production.js && node dist/server.js"]
